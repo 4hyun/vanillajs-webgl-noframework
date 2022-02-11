@@ -20,6 +20,15 @@ module.exports = {
       patterns: [{ from: "./shared", to: "" }],
     }),
     new MiniCssExtractPlugin({ filename: "[name].css", chunkFilename: "[id].css" }),
+    new ImageMinimizerPlugin({
+      minimizerOptions: {
+        plugins: [
+          ["gifsicle", { interlaced: true }],
+          ["jpegtran", { progressive: true }],
+          ["optipng", { optimizationLevel: 8 }],
+        ],
+      },
+    }),
   ],
   module: {
     rules: [
