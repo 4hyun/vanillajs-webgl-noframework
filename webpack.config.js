@@ -1,15 +1,17 @@
-const path = require("path")
-const webpack = require("webpack")
+const path = require("path");
+const webpack = require("webpack");
 
-const CopyWebpackPlugin = require("copy-webpack-plugin")
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === "dev"
+const IS_DEVELOPMENT = process.env.NODE_ENV === "dev";
 
-const dirApp = path.join(__dirname, "app")
-const dirShared = path.join(__dirname, "shared")
-const dirStyles = path.join(__dirname, "styles")
-const dirNode = "node_modules"
+const dirApp = path.join(__dirname, "app");
+const dirShared = path.join(__dirname, "shared");
+const dirStyles = path.join(__dirname, "styles");
+const dirNode = "node_modules";
 
 module.exports = {
   entry: [path.join(dirApp, "index.js"), path.join(dirStyles, "index.scss")],
@@ -19,16 +21,23 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [{ from: "./shared", to: "" }],
     }),
-    new MiniCssExtractPlugin({ filename: "[name].css", chunkFilename: "[id].css" }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css",
+    }),
     new ImageMinimizerPlugin({
-      minimizerOptions: {
-        plugins: [
-          ["gifsicle", { interlaced: true }],
-          ["jpegtran", { progressive: true }],
-          ["optipng", { optimizationLevel: 8 }],
-        ],
+      minimizer: {
+        implementation: ImageMinimizerPlugin.imageminMinify,
+        options: {
+          plugins: [
+            ["gifsicle", { interlaced: true }],
+            ["jpegtran", { progressive: true }],
+            ["optipng", { optimizationLevel: 8 }],
+          ],
+        },
       },
     }),
+    new CleanWebpackPlugin(),
   ],
   module: {
     rules: [
@@ -47,7 +56,7 @@ module.exports = {
         loader: "file-loader",
         options: {
           name(resourcePath, resourceQuery) {
-            return "[hash].[ext]"
+            return "[hash].[ext]";
           },
         },
       },
@@ -59,6 +68,17 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(glsl|frag|vert)$/,
+        loader: "raw-loader",
+        exclude: /node_modules/,
+      },
+
+      {
+        test: /\.(glsl|frag|vert)$/,
+        loader: "glslify-loader",
+        exclude: /node_modules/,
+      },
     ],
   },
-}
+};
