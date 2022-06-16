@@ -62,5 +62,3 @@ module.exports = {
     ],
   },
 }
-
-// paused course video at 0:36:38
