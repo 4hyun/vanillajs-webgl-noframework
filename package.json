@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run dev",
     "backend:build": "babel server/app.js -d server/dist",
-    "backend:start": "nodemon --exec \"babel-node server/app.js\"",
+    "backend:start": "nodemon -e pug --exec \"babel-node server/app.js\"",
     "frontend:dev": "webpack serve --progress --config webpack.config.dev.js",
     "frontend:build": "webpack --progress --config webpack.config.build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
