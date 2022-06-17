@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
-    "backend:build": "babel server/app.js -d server-dist",
-    "backend:start": "nodemon server/dist/app.js",
+    "backend:build": "babel server/app.js -d server/dist",
+    "backend:start": "nodemon --exec \"babel-node server/app.js\"",
     "frontend:dev": "webpack serve --progress --config webpack.config.dev.js",
     "frontend:build": "webpack --progress --config webpack.config.build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.17.2",
+    "@babel/node": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
