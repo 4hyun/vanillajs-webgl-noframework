@@ -4,4 +4,7 @@ block variables
   - const template = 'details';
 
 block content
-  h1.details__title Details
+  .detail
+    .detail__wrapper
+      figure.detail__media
+        img.detail__media__image(alt=project.data.image.alt src=project.data.image.url)

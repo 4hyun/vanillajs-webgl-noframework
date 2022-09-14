@@ -1,0 +1,12 @@
+{
+  "dimmer.enabled": false,
+  "editor.formatOnSave": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": [
+    "source.formatDocument",
+    "source.fixAll.eslint"
+  ],
+  "[jade]": {
+    "editor.defaultFormatter": "ducfilan.pug-formatter"
+  },
+}
