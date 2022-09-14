@@ -12,7 +12,7 @@ const accessToken = process.env.PRISMIC_PERMANENT_ACCESS_TOKEN;
 // project.
 const routes = [
   {
-    type: "about",
+    type: "product",
     path: "/:uid",
   },
 ];

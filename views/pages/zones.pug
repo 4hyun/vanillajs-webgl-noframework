@@ -4,4 +4,12 @@ block variables
   - const template = 'zones';
 
 block content
-  h1.zones__title Zones
+  .project-category
+    .project-category__wrapper
+      .project-category__gallery
+        .project-category__gallery__wrapper
+          each pcat in projectCategories
+            each projectContainer in pcat.data.projects
+              a.project-category__gallery__link
+                figure.project-cateogry__gallery__media
+                  img.project-category__gallery__media__image(alt=projectContainer.project.data.image.alt src=projectContainer.project.data.image.url)

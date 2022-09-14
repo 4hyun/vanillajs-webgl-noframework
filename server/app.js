@@ -14,6 +14,23 @@ const handleLinkResolver = (doc) => {
   return "/";
 };
 
+/* fetchers */
+const fetchMeta = () => client.getSingle("meta");
+
+const fetchProjectByUID = (uid, params = {}) =>
+  client.getByUID("project", uid, params);
+
+const fetchAllProjectCategory = (params = {}) =>
+  client.getAllByType("project_category", params);
+
+const fetchWithPredicates = (predicates) => {
+  return client.get({ predicates });
+};
+
+/* utils */
+const getProjectCategoryOfTheProject = (project) =>
+  project.data.project_category;
+
 app.use((req, res, next) => {
   res.locals.ctx = {
     prismicH,
@@ -21,50 +38,49 @@ app.use((req, res, next) => {
   next();
 });
 
-console.log("PRISMIC_ENDPOINT :", process.env.PRISMIC_ENDPOINT);
 app.set("views", viewPath);
 app.set("view engine", "pug");
 
 app.get("/", (req, res) => {
   res.render("pages/home");
 });
+
 app.get("/about", async (req, res) => {
-  const response = await client.get({
-    predicates: prismic.predicates.any("document.type", ["about", "meta"]),
-  });
+  const response = await fetchWithPredicates(
+    prismic.predicates.any("document.type", ["about", "meta"])
+  );
   const { about, meta } = response.results.reduce(
     (acc, doc) => (acc[doc.type] = doc) && acc,
     {}
   );
-  console.log(" about.gallery: ", about.gallery);
   res.render("pages/about", { about, meta });
 });
-app.get("/zones", (req, res) => {
-  res.render("pages/zones");
+
+app.get("/zones", async (req, res) => {
+  const [meta, projectCategories] = await Promise.all([
+    fetchMeta(),
+    fetchAllProjectCategory({ fetchLinks: "project.image" }),
+  ]);
+
+  console.log(
+    "projectCategories[0]: ",
+    projectCategories[0].data.projects[0].project.data
+  );
+  res.render("pages/zones", { meta, projectCategories });
 });
+
 app.get("/details/:uid", async (req, res) => {
   console.log("DEBUG request");
   const uid = req.params.uid;
-  const fetchMeta = () => client.getSingle("meta");
-  const fetchProjectByUID = () => client.getByUID("project", uid);
-  const fetchProjectCategoryOfTheProject = (id) =>
-    client.get({
-      predicates: prismic.predicates.at("my.project.project_category", id),
-    });
+  const fetchProjectByUIDParams = {
+    fetchLinks: "project_category.title",
+  };
+
   const [meta, project] = await Promise.all([
     fetchMeta(),
-    fetchProjectByUID(uid),
+    fetchProjectByUID(uid, fetchProjectByUIDParams),
   ]);
-  const projectCategoryOfTheProject = await fetchProjectCategoryOfTheProject(
-    getProjectCategoryOfTheProject(project).id
-  );
-
-  // console.log("DEBUG project: ", project);
-
-  console.log(
-    "DEBUG projectCategoryOfTheProject: ",
-    projectCategoryOfTheProject
-  );
+  // console.log("project.data: ", project.data);
   res.render("pages/details", { meta, project });
 });
 
@@ -72,6 +88,3 @@ app.listen(port, () => {
   console.log("debug `viewPath`: ", viewPath);
   console.log("App listening on port " + port + ".");
 });
-
-const getProjectCategoryOfTheProject = (project) =>
-  project.data.project_category;
