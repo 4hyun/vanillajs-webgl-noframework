@@ -6,9 +6,7 @@ nav.navigation
       svg.navigation__link__icon
 
     ul.navigation__list
-      li.navigation__list__item
-        a.nagivation__list__link(href="/about") About
-
-      li.navigation__list__item
-        a.nagivation__list__link(href="/zones") Zones
+      each item in navigation.data.list
+        li.navigation__list__item
+          a.nagivation__list__link(href=Link(item.link))=item.text[0].text
 

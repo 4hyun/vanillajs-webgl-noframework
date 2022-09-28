@@ -4,4 +4,18 @@ block variables
   - const template = 'home';
 
 block content
-  h1.home__title Home
+  .home(data-background="#C97164" data-color="#F9F1E7")
+    .home__wrapper
+      .home__titles
+        each pcat, index in projectCategories
+          .home__titles__label=`${home.data.zone} ${Numbers(index)}`
+          .home__titles__title=pcat.data.title
+
+
+      .home__gallery
+        each media in home.data.gallery
+          figure.home__gallery__media
+            img.home__gallery__media__image(alt=media.image.alt src=media.image.url)
+
+      a(href="/zones")=home.data.button
+

@@ -6,10 +6,22 @@ block variables
 block content
   .project-category
     .project-category__wrapper
+      .project-category__titles
+        each pcat, index in projectCategories
+          .project-category__titles__label=`${home.data.zone} ${Numbers(index)}`
+          .project-category__titles__title=pcat.data.title
+
+
       .project-category__gallery
         .project-category__gallery__wrapper
           each pcat in projectCategories
             each projectContainer in pcat.data.projects
-              a.project-category__gallery__link
+              a.project-category__gallery__link(href=Link(projectContainer.project))
                 figure.project-cateogry__gallery__media
                   img.project-category__gallery__media__image(alt=projectContainer.project.data.image.alt src=projectContainer.project.data.image.url)
+
+      .project-category__content
+        each pcat in projectCategories
+          article.project-category__article
+            h2.project-category__article__title=`${pcat.data.title} ${home.data.zone}`
+            p.project-category__article__description!=pcat.data.description.replace(/\n/g, '<br>')
