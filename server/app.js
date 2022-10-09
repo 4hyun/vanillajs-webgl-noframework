@@ -11,7 +11,7 @@ import * as prismic from "@prismicio/client";
 import { client } from "./lib/prismic/client";
 
 const app = express();
-const port = 3002;
+const PORT = 3002;
 const viewPath = path.join(__dirname, "..", "views");
 
 function linkResolver(doc) {
@@ -74,6 +74,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride());
 app.use(errorHandler());
+app.use(express.static(path.join(__dirname, "..", "public")));
+
 app.set("views", viewPath);
 app.set("view engine", "pug");
 
@@ -153,7 +155,7 @@ app.get("/details/:uid", async (req, res) => {
   res.render("pages/details", { meta, project, preloader, navigation });
 });
 
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log("debug `viewPath`: ", viewPath);
-  console.log("App listening on port " + port + ".");
+  console.log("App listening on PORT " + PORT + ".");
 });
